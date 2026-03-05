@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --foreground-rgb: 15, 23, 42;
+  --background-start-rgb: 248, 250, 252;
+  --background-end-rgb: 241, 245, 249;
+  --accent-blue: 37, 99, 235;
+  --accent-purple: 147, 51, 234;
+}
+
+[data-theme='dark'] {
+  --foreground-rgb: 248, 250, 252;
+  --background-start-rgb: 2, 6, 23;
+  --background-end-rgb: 15, 23, 42;
+}
+
+body {
+  font-family: 'Outfit', sans-serif;
+  color: rgb(var(--foreground-rgb));
+  background: radial-gradient(circle at top left, rgba(37, 99, 235, 0.05), transparent),
+              radial-gradient(circle at bottom right, rgba(147, 51, 234, 0.05), transparent),
+              rgb(var(--background-start-rgb));
+  min-height: 100vh;
+}
+
+.glass {
+  @apply bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border border-white/20 dark:border-slate-800/50;
+}
+
+.card-premium {
+  @apply glass rounded-3xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.1)] transition-all duration-300 hover:translate-y-[-4px] hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)];
+}
+
+.btn-premium {
+  @apply bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold py-3 px-6 rounded-2xl shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40 active:scale-[0.98] transition-all;
+}
+
+.text-gradient {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-purple-400;
+}
+
+.input-premium {
+  @apply bg-slate-100/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl py-3 px-5 w-full focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-200 dark:bg-slate-800 rounded-full;
+}
