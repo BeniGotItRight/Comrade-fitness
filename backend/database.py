@@ -3,8 +3,12 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import os
 
-# Support both SQLite (local) and PostgreSQL (production/Supabase)
-SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./comradefit.db")
+# Support both SQLite (local) and PostgreSQL (production/Supabase/Vercel)
+# Checks multiple common environment variable names for compatibility
+SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL") or \
+                           os.getenv("SUPABASE_DATABASE_URL") or \
+                           os.getenv("POSTGRES_URL") or \
+                           "sqlite:///./comradefit.db"
 
 # Security Fix: For PostgreSQL, ensure we use a connection pool
 if SQLALCHEMY_DATABASE_URL.startswith("postgresql"):
