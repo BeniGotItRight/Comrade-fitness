@@ -1,26 +1,50 @@
-'use client'
-
-import { motion } from 'framer-motion'
-import { useState, useEffect } from 'react'
-import { Flame, Footprints, Droplets, Scale, Zap, PlayCircle, Trophy, Target, ChevronRight, AlertCircle, RefreshCcw } from 'lucide-react'
+import Link from 'next/link'
 
 export default function Dashboard() {
   const [stats, setStats] = useState({
-    calories: 1250,
+    calories: 0,
     goal: 2200,
-    steps: 6432,
-    water: 5,
-    weight: 72.5
+    steps: 0,
+    water: 0,
+    weight: 0
   })
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    // Simulate initial data fetch
-    const timer = setTimeout(() => {
-      setIsLoading(false)
-    }, 1500)
-    return () => clearTimeout(timer)
+    async function fetchStats() {
+      try {
+        const userId = 1 // Benson's ID
+        const baseUrl = 'http://localhost:8000'
+        
+        // Fetch Weight
+        const wRes = await fetch(`${baseUrl}/fitness/weight/${userId}`)
+        const wData = await wRes.json()
+        const currentWeight = wData.length > 0 ? wData[0].weight : 72.5
+
+        // Fetch Water (Simplified for now - would need a dedicated endpoint or daily aggregate)
+        // For now using the seed value or default
+        
+        // Fetch Calories (Today)
+        // In a real app, we'd have a summary endpoint. 
+        // For this demo, we'll simulate the live fetch from specific logs.
+        
+        setStats(prev => ({
+          ...prev,
+          weight: currentWeight,
+          calories: 400, // From seed Breakfast
+          steps: 6432,   // From seed Activity
+          water: 5       // From seed Water
+        }))
+        
+        setIsLoading(false)
+      } catch (err) {
+        console.error("Fetch error:", err)
+        setError("Could not sync with the fitness server. Check if the backend is running!")
+        setIsLoading(false)
+      }
+    }
+    fetchStats()
   }, [])
 
   const handleRefresh = () => {
@@ -136,8 +160,12 @@ export default function Dashboard() {
                     Your protein intake is perfect for muscle recovery. Let's push for an extra 2,000 steps today to incinerate that final layer of abdominal fat.
                 </p>
                 <div className="pt-4 flex flex-col sm:flex-row gap-4">
-                    <button className="btn-premium flex-1 py-4">Start Workout</button>
-                    <button className="glass bg-white/10 text-white flex-1 rounded-2xl font-bold text-sm tracking-widest uppercase py-4">Get Advice</button>
+                    <Link href="/activities" className="flex-1">
+                      <button className="btn-premium w-full py-4 uppercase tracking-widest font-black">Start Workout</button>
+                    </Link>
+                    <Link href="/coach" className="flex-1">
+                      <button className="glass bg-white/10 text-white w-full rounded-2xl font-bold text-sm tracking-widest uppercase py-4">Get Advice</button>
+                    </Link>
                 </div>
             </div>
         </motion.div>
@@ -146,33 +174,37 @@ export default function Dashboard() {
       {/* Main Stats Grid */}
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {cards.map((card, i) => (
-          <motion.div
+          <Link 
             key={card.title}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.1 }}
-            className="card-premium flex flex-col items-center justify-center text-center py-10"
+            href={`/${card.title.toLowerCase() === 'calories' ? 'meals' : card.title.toLowerCase()}`}
           >
-            <div className={`w-16 h-16 rounded-[1.5rem] bg-gradient-to-br ${card.color} text-white flex items-center justify-center mb-6 shadow-2xl shadow-blue-500/20`}>
-              <card.icon className="w-8 h-8" />
-            </div>
-            <p className="text-xs font-black uppercase tracking-[0.3em] text-slate-400 mb-2">{card.title}</p>
-            <div className="flex items-baseline gap-2">
-              <span className="text-4xl font-black tracking-tight">{card.value}</span>
-              <span className="text-sm font-bold text-slate-400">{card.unit}</span>
-            </div>
-            {card.total && (
-                <div className="mt-6 w-full px-8">
-                    <div className="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                        <motion.div 
-                            initial={{ width: 0 }}
-                            animate={{ width: `${(parseInt(card.value) / card.total) * 100}%` }}
-                            className={`h-full bg-gradient-to-r ${card.color}`} 
-                        />
-                    </div>
-                </div>
-            )}
-          </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.1 }}
+              className="card-premium h-full flex flex-col items-center justify-center text-center py-10 cursor-pointer"
+            >
+              <div className={`w-16 h-16 rounded-[1.5rem] bg-gradient-to-br ${card.color} text-white flex items-center justify-center mb-6 shadow-2xl shadow-blue-500/20`}>
+                <card.icon className="w-8 h-8" />
+              </div>
+              <p className="text-xs font-black uppercase tracking-[0.3em] text-slate-400 mb-2">{card.title}</p>
+              <div className="flex items-baseline gap-2">
+                <span className="text-4xl font-black tracking-tight">{card.value}</span>
+                <span className="text-sm font-bold text-slate-400">{card.unit}</span>
+              </div>
+              {card.total && (
+                  <div className="mt-6 w-full px-8">
+                      <div className="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                          <motion.div 
+                              initial={{ width: 0 }}
+                              animate={{ width: `${(parseInt(card.value) / card.total) * 100}%` }}
+                              className={`h-full bg-gradient-to-r ${card.color}`} 
+                          />
+                      </div>
+                  </div>
+              )}
+            </motion.div>
+          </Link>
         ))}
       </section>
 
@@ -260,9 +292,6 @@ export default function Dashboard() {
             </motion.div>
         </section>
       </div>
-    </div>
-  )
-}
     </div>
   )
 }
