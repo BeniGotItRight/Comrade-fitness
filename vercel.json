@@ -1,3 +1,19 @@
 {
-  "rewrites": [{ "source": "/api/(.*)", "destination": "backend/main.py" }]
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "/api/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/frontend/$1"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/frontend",
+      "permanent": true
+    }
+  ]
 }

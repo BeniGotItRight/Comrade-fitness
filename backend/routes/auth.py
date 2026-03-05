@@ -35,13 +35,16 @@ def create_access_token(data: dict, expires_delta: timedelta = None):
 
 @router.post("/register")
 def register(user_data: dict, db: Session = Depends(get_db)):
-    db_user = db.query(models.User).filter(models.User.email == user_data["email"]).first()
+    db_user = db.query(models.User).filter(
+        (models.User.email == user_data["email"]) | (models.User.username == user_data["username"])
+    ).first()
     if db_user:
-        raise HTTPException(status_code=400, detail="Email already registered")
+        raise HTTPException(status_code=400, detail="Username or Email already registered")
     
     hashed_password = get_password_hash(user_data["password"])
     new_user = models.User(
         email=user_data["email"],
+        username=user_data["username"],
         hashed_password=hashed_password,
         full_name=user_data["full_name"],
         age=user_data.get("age"),
@@ -59,7 +62,9 @@ def register(user_data: dict, db: Session = Depends(get_db)):
 
 @router.post("/login")
 def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
-    user = db.query(models.User).filter(models.User.email == form_data.username).first()
+    user = db.query(models.User).filter(
+        (models.User.email == form_data.username) | (models.User.username == form_data.username)
+    ).first()
     if not user or not verify_password(form_data.password, user.hashed_password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

@@ -10,14 +10,18 @@ def seed_default_user():
     db = SessionLocal()
     try:
         admin_email = os.getenv("ADMIN_EMAIL", "benson@comradefit.ai")
+        admin_username = os.getenv("ADMIN_USERNAME", "benson")
         admin_password = os.getenv("ADMIN_PASSWORD", "benson2007")
         
-        existing_user = db.query(models.User).filter(models.User.email == admin_email).first()
+        existing_user = db.query(models.User).filter(
+            (models.User.email == admin_email) | (models.User.username == admin_username)
+        ).first()
         if not existing_user:
-            print(f"Seeding default user: {admin_email}")
+            print(f"Seeding default user: {admin_username}")
             hashed_password = get_password_hash(admin_password)
             default_user = models.User(
                 email=admin_email,
+                username=admin_username,
                 hashed_password=hashed_password,
                 full_name="Benson Motari",
                 age=19,
