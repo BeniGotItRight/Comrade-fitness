@@ -6,6 +6,7 @@ import os
 # Support both SQLite (local) and PostgreSQL (production/Supabase/Vercel)
 # Checks multiple common environment variable names for compatibility
 SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL") or \
+                           os.getenv("SUPABASE_POSTGRES_URL") or \
                            os.getenv("SUPABASE_DATABASE_URL") or \
                            os.getenv("POSTGRES_URL") or \
                            "sqlite:///./comradefit.db"
