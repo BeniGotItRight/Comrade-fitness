@@ -1,19 +1,9 @@
 {
+  "version": 2,
   "rewrites": [
     {
-      "source": "/api/:path*",
-      "destination": "/api/:path*"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/frontend/$1"
-    }
-  ],
-  "redirects": [
-    {
-      "source": "/",
-      "destination": "/frontend",
-      "permanent": true
+      "source": "/api/(.*)",
+      "destination": "backend/main.py"
     }
   ]
 }
