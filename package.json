@@ -1,8 +1,31 @@
 {
+  "name": "comradefit-ai",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
   "dependencies": {
     "clsx": "^2.1.1",
-    "framer-motion": "^12.35.0",
-    "lucide-react": "^0.577.0",
-    "tailwind-merge": "^3.5.0"
+    "framer-motion": "^10.16.4",
+    "lucide-react": "^0.284.0",
+    "next": "14.2.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tailwind-merge": "^1.14.0",
+    "chart.js": "^4.4.1",
+    "react-chartjs-2": "^5.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.8.2",
+    "@types/react": "^18.2.25",
+    "@types/react-dom": "^18.2.10",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.31",
+    "tailwindcss": "^3.3.3",
+    "typescript": "^5.2.2"
   }
 }
