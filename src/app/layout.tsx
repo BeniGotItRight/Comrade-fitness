@@ -1,3 +1,4 @@
+// ComradeFit AI - Production v1.0.1
 import type { Metadata } from 'next'
 import './styles/globals.css'
 
